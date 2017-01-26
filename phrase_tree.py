@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+
+
+# Code taken from James Cross' Span Parser: https://github.com/jhcross/span-parser
 
 """
 Recursive representation of a phrase-structure parse tree 

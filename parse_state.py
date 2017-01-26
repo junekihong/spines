@@ -1,4 +1,6 @@
-#!/usr/bin/python
+
+
+# Code taken from James Cross' Span Parser: https://github.com/jhcross/span-parser
 
 from __future__ import print_function
 from __future__ import division
