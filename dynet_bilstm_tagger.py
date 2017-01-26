@@ -109,11 +109,36 @@ def tag_sent(words):
 
 
 if __name__ == "__main__":
-    # format of files: each line is "word1/tag2 word2/tag2 ..."
-    train_file="WSJ_TRAIN"
-    dev_file="WSJ_DEV"
+    import argparse
 
-    modelname = "model"
+    parser = argparse.ArgumentParser(prog="Spine-Based Tagger")
+    parser.add_argument(
+        "--train",
+        dest="train",
+        help="Training file. (Format is \"word1/tag1 word2/tag2 ...\")",
+    )
+    parser.add_argument(
+        "--dev",
+        dest="dev",
+        help="Development file.",
+    )
+    parser.add_argument(
+        "--test",
+        dest="test",
+        help="Test file.",
+    )
+    parser.add_argument(
+        "--model",
+        dest="model",
+        help="Model filename to save to/load from.",
+    )
+    args = parser.parse_args()
+
+        
+
+    # format of files: each line is "word1/tag2 word2/tag2 ..."
+    train_file, dev_file = args.train, args.dev
+    model_file = args.model
 
     
     train=list(read(train_file))
@@ -185,7 +210,7 @@ if __name__ == "__main__":
                 accuracy = good/(good+bad)
                 if accuracy > best_accuracy:
                     print "saving model"
-                    model.save(modelname)
+                    model.save(model_file)
                     best_accuracy = accuracy
                 print accuracy, good_sent/(good_sent+bad_sent)
             # train on sent
