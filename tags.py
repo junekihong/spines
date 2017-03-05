@@ -9,17 +9,26 @@ from phrase_tree import *
 DELIMITER = "/"
 
 def extractSupertags(tree):
+    spines, total = 0,0
     queue = [tree]
     while True:
         terminate = True
         newqueue = []
         for t in queue:
-            if len(t.children) == 0:
+            unary_spine = False
+            candidate = t
+            while len(candidate.children) == 1:
+                candidate = candidate.children[0]
+                unary_spine = True
+
+            if unary_spine:
+                spines += 1
+            total += 1
+
+            if len(candidate.children) == 0:
                 newqueue.append(t)
                 continue
-            if len(t.children) == 1 and len(t.children[0].children) == 0:
-                newqueue.append(t)
-                continue
+
             terminate = False
             for child in t.children:
                 newqueue.append(child)
@@ -29,11 +38,26 @@ def extractSupertags(tree):
     return queue
 
 def processtag(tree):
-    if len(tree.children) == 0:
+
+    """if len(tree.children) == 0:
         word, tag = tree.sentence[tree.leaf]
         return word + DELIMITER + tag
-    word, tag = tree.sentence[tree.children[0].leaf]
-    return word + DELIMITER + tag + "-" + tree.symbol
+    """
+
+    symbols = ""
+    while len(tree.children) == 1:
+        symbols = "-" + tree.symbol + symbols
+        tree = tree.children[0]
+    if symbols == "-":
+        symbols = ""
+        
+
+    word, tag = tree.sentence[tree.leaf]
+
+    #print(word, DELIMITER, tag, symbols)
+    #raw_input()
+
+    return word + DELIMITER + tag + symbols
     
 
 
@@ -48,6 +72,12 @@ if __name__ == "__main__":
 
     for tree in trees:
         supertags = extractSupertags(tree)
+        
+        #for tag in supertags:
+            #print tag,
+            #print processtag(tag)
+
+
         supertags = [processtag(tag) for tag in supertags]
 
         output.write(" ".join(supertags) + "\n")

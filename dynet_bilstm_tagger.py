@@ -125,6 +125,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test",
         dest="test",
+        default=None,
         help="Test file.",
     )
     parser.add_argument(
@@ -138,11 +139,17 @@ if __name__ == "__main__":
 
     # format of files: each line is "word1/tag2 word2/tag2 ..."
     train_file, dev_file = args.train, args.dev
+    test_file = args.test
     model_file = args.model
 
-    
+
     train=list(read(train_file))
     dev=list(read(dev_file))
+    test = None
+    if test_file is not None:
+        test=list(read(test_file))
+
+
     words,tags,chars = [],[],set()
     wc=Counter()
     for sent in train:
@@ -184,9 +191,39 @@ if __name__ == "__main__":
     cFwdRNN = dy.LSTMBuilder(1, 20, 64, model)
     cBwdRNN = dy.LSTMBuilder(1, 20, 64, model)
     
+    
 
+
+
+    # Main
     best_accuracy = 0
     num_tagged = cum_loss = 0
+
+    num_words = num_spines = 0
+
+    if test is not None:
+        model.load(model_file)
+        good_sent = bad_sent = good = bad = 0.0
+        for sent in test:
+            words = [w for w,t in sent]
+            golds = [t for w,t in sent]
+            tags  = [t for w,t in tag_sent(words)]
+
+            num_words += len(words)
+            #for t in golds:
+            #    print(t,)
+            #raw_input()
+
+            if tags == golds: good_sent += 1
+            else: bad_sent += 1
+            for go,gu in zip(golds, tags):
+                if go == gu: good += 1
+                else: bad += 1
+        accuracy = good/(good+bad)
+        print accuracy, good_sent/(good_sent+bad_sent)
+                    
+        exit()
+
     for ITER in xrange(50):
         random.shuffle(train)
         for i,s in enumerate(train,1):
