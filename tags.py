@@ -2,7 +2,6 @@
 # coding=utf-8
 import sys
 from pprint import pprint
-import pyparsing as pp
 from features import *
 from phrase_tree import *
 

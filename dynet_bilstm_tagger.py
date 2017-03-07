@@ -106,6 +106,14 @@ def tag_sent(words):
     return zip(words, tags)
 
 
+def strip_spines(tags):
+    result = []
+    for t in tags:
+        if "-" in t and (t != "-LRB-" and t != "-RRB-"):
+            t = t.split("-")[0]
+        result.append(t)
+    return result
+
 
 
 if __name__ == "__main__":
@@ -204,24 +212,52 @@ if __name__ == "__main__":
     if test is not None:
         model.load(model_file)
         good_sent = bad_sent = good = bad = 0.0
+        good_sent_relaxed = bad_sent_relaxed = 0.0
+        good_relaxed = bad_relaxed = 0.0
+
         for sent in test:
             words = [w for w,t in sent]
             golds = [t for w,t in sent]
             tags  = [t for w,t in tag_sent(words)]
 
+            stripped_tags = strip_spines(tags)
+            stripped_golds = strip_spines(golds)
+
             num_words += len(words)
-            #for t in golds:
-            #    print(t,)
-            #raw_input()
+
+            """
+            for t in golds:
+                print t,
+            print
+            for t in tags:
+                print t,
+            print
+            print
+            raw_input()
+            """
 
             if tags == golds: good_sent += 1
             else: bad_sent += 1
+
+            if stripped_tags == stripped_golds: good_sent_relaxed += 1
+            else: bad_sent_relaxed += 1
+
             for go,gu in zip(golds, tags):
                 if go == gu: good += 1
                 else: bad += 1
+                
+            for go,gu in zip(stripped_golds, stripped_tags):
+                if go == gu: good_relaxed += 1
+                else: bad_relaxed += 1
+
         accuracy = good/(good+bad)
-        print accuracy, good_sent/(good_sent+bad_sent)
-                    
+        accuracy_relaxed = good_relaxed/(good_relaxed+bad_relaxed)
+
+
+        print "WORDS EXACT MATCH:  ", accuracy, "\t", 
+        print "SENTENCE EXACT MATCH:  ", good_sent/(good_sent+bad_sent)
+        print "WORDS RELAXED MATCH:", accuracy_relaxed, "\t",
+        print "SENTENCE RELAXED MATCH:", good_sent_relaxed/(good_sent_relaxed+bad_sent_relaxed)
         exit()
 
     for ITER in xrange(50):
