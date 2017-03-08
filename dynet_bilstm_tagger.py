@@ -31,6 +31,7 @@ def read(fname):
             sent = [tuple(x.rsplit("/",1)) for x in line]
             yield sent
 
+
 def word_rep(w, cf_init, cb_init):
     if wc[w] > 5:
         w_index = vw.w2i[w]
@@ -224,17 +225,6 @@ if __name__ == "__main__":
             stripped_golds = strip_spines(golds)
 
             num_words += len(words)
-
-            """
-            for t in golds:
-                print t,
-            print
-            for t in tags:
-                print t,
-            print
-            print
-            raw_input()
-            """
 
             if tags == golds: good_sent += 1
             else: bad_sent += 1

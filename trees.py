@@ -37,6 +37,10 @@ def truncate(tree):
                 children.append(child)
                 queue.append(child)
 
+                #children.append(candidate)
+                #queue.append(candidate)
+
+
         t.children = children
 
 
