@@ -429,9 +429,9 @@ class Parser(object):
             local_accuracy = predicted.compare(tree)
             accuracy += local_accuracy
             results.append(predicted)
-            print(predicted)
-            print("sent %d  len %d  %s" % (i+1, len(tree.sentence), local_accuracy), file=sys.stderr)
-        print("model scores:", total_score,"\tavg:", sum(avg_score)/len(avg_score), file=sys.stderr)
+            #print(predicted)
+            #print("sent %d  len %d  %s" % (i+1, len(tree.sentence), local_accuracy), file=sys.stderr)
+        #print("model scores:", total_score,"\tavg:", sum(avg_score)/len(avg_score), file=sys.stderr)
 
         return accuracy, results
 

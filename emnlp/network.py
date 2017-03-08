@@ -537,7 +537,7 @@ class Network(object):
                 sys.stdout.flush()
 
                 if ((b + 1) % parse_every) == 0 or b == (num_batches - 1):
-                    dev_acc = Parser.evaluate_corpus(
+                    dev_acc, results = Parser.evaluate_corpus(
                         dev_trees,
                         fm,
                         network,
